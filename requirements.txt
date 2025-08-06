@@ -13,6 +13,7 @@ flatbuffers==24.3.25
 gast==0.5.4
 google-pasta==0.2.0
 grpcio==1.64.1
+gunicorn==21.2.0
 h5py==3.11.0
 idna==3.7
 itsdangerous==2.2.0
@@ -48,11 +49,13 @@ rich==13.7.1
 scikit-learn==1.5.0
 scipy==1.13.1
 six==1.16.0
+streamlit==1.32.0
 tensorboard==2.16.2
 tensorboard-data-server==0.7.2
 tensorflow==2.16.1
 tensorflow-io-gcs-filesystem==0.37.0
 termcolor==2.4.0
+threading
 threadpoolctl==3.5.0
 typing_extensions==4.12.2
 tzdata==2024.1

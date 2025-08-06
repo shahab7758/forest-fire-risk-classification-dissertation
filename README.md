@@ -1,130 +1,116 @@
-<h1 align="center">Forest Fire Risk Classification 🔥</h1>
+# Forest Fire Risk Classification System
 
-<div align="center">
-  
-[![Python](https://img.shields.io/badge/Python-3.10.13-blue.svg?logo=python)](https://www.python.org/downloads/release/python-31013/)
-[![Flask](https://img.shields.io/badge/Flask-3.0.3-lightgrey.svg?logo=flask)](https://flask.palletsprojects.com/en/3.0.x/)
-[![TensorFlow](https://img.shields.io/badge/TensorFlow-2.16.1-orange.svg?logo=tensorflow)](https://www.tensorflow.org/)
-[![License](https://img.shields.io/badge/License-Apache%202.0-green.svg)](LICENSE)
-[![Status](https://img.shields.io/badge/Status-Active-brightgreen.svg)](https://github.com/username/repo)
+A comprehensive AI-powered system for detecting and predicting forest fire risks using camera images, satellite data, and meteorological information.
 
-</div>
+## Features
 
-![Wildfire](https://medforest.net/wp-content/uploads/2019/03/forest-fire-2268725_1280.jpg)
+- 🔥 **Camera Detection**: Upload images to detect fire risks in real-time
+- 🛰️ **Satellite Analysis**: Analyze satellite imagery for fire-prone areas
+- 🌤️ **Weather Integration**: Combine meteorological data with image analysis
+- 🚨 **Alert System**: Subscribe to location-based wildfire alerts
 
-## Table of Contents 📚
+## Quick Start
 
-1. [Background on Wildfires 🌍](#background-on-wildfires-)
-2. [Project Overview 🚀](#project-overview-)
-3. [Features 🌟](#features-)
-4. [Screenshot 📸](#screenshot-)
-5. [Installation 🛠️](#installation-%EF%B8%8F)
-6. [Usage 💻](#usage-)
-7. [File Structure 📁](#file-structure-)
-8. [Requirements 📦](#requirements-)
+### Local Development
 
-
-## Background on Wildfires 🌍
-
-Wildfires pose a significant environmental and economic threat worldwide. Their frequency and intensity have been escalating due to various factors, particularly climate change.
-
-### Key Facts:
-
-- **Global Impact**: Wildfires have caused devastating damage across various regions, from the Amazon Rainforest to Australia. In 2020, wildfires in California alone burned over 4.2 million acres【[Cal Fire](https://www.fire.ca.gov/incidents/2020/)】.
-- **Frequency**: Over 100,000 wildfires occur annually in the U.S. alone【[National Geographic](https://www.nationalgeographic.com/environment/article/wildfires)】.
-- **Economic Impact**: Wildfires cause an estimated $5 billion in damage annually in the U.S.【[Insurance Information Institute](https://www.iii.org/fact-statistic/facts-statistics-wildfires)】.
-- **Climate Change**: Rising global temperatures and drier conditions are significantly increasing the risk and severity of wildfires【[NASA](https://climate.nasa.gov/news/2878/the-link-between-climate-change-and-wildfires/)】.
-
-These alarming statistics underscore the urgent need for efficient wildfire detection and monitoring systems. Our **Wildfire Detection System** aims to address this need by leveraging cutting-edge technology to provide early detection and alerts, potentially saving lives and reducing damage.
-
-## Project Overview 🚀
-
-This project presents an innovative solution combining satellite imagery, camera feeds, and weather data to predict the risk of wildfires. Using advanced deep learning techniques, our system performs accurate predictions and provides timely alerts through a user-friendly Flask application. 
-
-Our models include:
-- **Satellite Classification CNN**: Using ResNet50v2, this model detects wildfire probabilities from satellite images with an accuracy of 97%.
-- **Image Classification CNN**: Also based on ResNet50v2, this model identifies fires in uploaded images with an accuracy of 98%.
-- **Weather Data Model**: This model predicts wildfire risks from meteorological data with an accuracy of 100%, albeit on a limited dataset.
-
-## Features 🌟
-
-- **Satellite Detection**: Detect wildfires using high-resolution satellite imagery.
-- **Camera Detection**: Identify wildfire outbreaks through analysis of images from cameras or drones.
-- **Weather Prediction**: Predict wildfire risks based on current and forecasted weather conditions.
-- **Alert System**: Receive hourly email alerts about wildfire risks in specified locations.
-
-## Screenshot 📸
-
-Here's a glimpse of the Wildfire Detection System interface:
-
-![Screenshot](src/static/images/Screenshot.png)
-
-## Installation 🛠️
-
-Follow these steps to set up the project locally:
-
-1. **Clone the repository**:
-   ```bash
-   git clone  https://github.com/shahab7758/ForestFireRiskClassification-
-   cd ForestFireRiskClassification-
-   ```
-
-2. **Create a virtual environment**:
-   ```bash
-   python3 -m venv venv
-   source venv/bin/activate  # On Windows use `venv\Scripts\activate`
-   ```
-
-3. **Install dependencies**:
+1. **Install dependencies:**
    ```bash
    pip install -r requirements.txt
    ```
 
-   Make sure to run the Jupyter notebooks for model training and saving on Kaggle:
-   - Open `wildfire-camera-detection.ipynb` and `wildfire-satellite-detection.ipynb` in Kaggle Notebooks to train and save the respective models.
-
-4. **Set up environment variables**:
-   Create a `.env` file and add your Mapbox token and other necessary configurations:
+2. **Set up environment variables:**
    ```bash
-   MAPBOX_TOKEN=your_mapbox_token
-   MAILERSEND_KEY=your_mailersend_key
+   cp .env.example .env
+   # Edit .env with your MAPBOX_TOKEN
    ```
 
-5. **Initialize the database**:
+3. **Run the application:**
    ```bash
-   python -c 'from src.app import init_db; init_db()'
+   cd src
+   python app.py
    ```
 
-6. **Run the application**:
+4. **Access the app:**
+   Open http://localhost:5000 in your browser
+
+### Docker Deployment
+
+1. **Build and run with Docker:**
    ```bash
-   python src/app.py
+   ./deploy.sh
    ```
 
-## Usage 💻
+2. **Or manually:**
+   ```bash
+   docker build -t forest-fire-app .
+   docker run -p 5000:5000 --env-file .env forest-fire-app
+   ```
 
-Once the application is running, navigate to the homepage to explore the features:
+### Heroku Deployment
 
-- **Home**: Overview and introduction to the system.
-- **Camera Detection**: Upload images for wildfire detection.
-- **Satellite Detection**: Analyze satellite data for wildfire hotspots.
-- **Alert Service**: Subscribe for wildfire alerts for specific geographic areas.
+1. **Install Heroku CLI and login:**
+   ```bash
+   heroku login
+   ```
 
+2. **Create Heroku app:**
+   ```bash
+   heroku create your-app-name
+   ```
 
+3. **Set environment variables:**
+   ```bash
+   heroku config:set MAPBOX_TOKEN=your_token_here
+   ```
 
+4. **Deploy:**
+   ```bash
+   git push heroku main
+   ```
 
+## API Endpoints
 
-## Requirements 📦
+- `GET /` - Home page
+- `GET /detect/camera` - Camera detection interface
+- `GET /detect/satellite` - Satellite detection interface
+- `GET /alert` - Alert subscription interface
+- `POST /camera_predict` - Process camera images
+- `POST /satellite_predict` - Process satellite data
+- `POST /alert` - Subscribe to alerts
 
-- **Python 3.10.13**
-- **Flask 3.0.3**
-- **TensorFlow 2.16.1**
-- **Pandas 2.2.2**
-- **Scikit-Learn 1.5.0**
-- **Mailersend 0.5.6**
-- **OpenMeteo SDK 1.11.7**
-  
+## Environment Variables
 
-For the full list of dependencies, see the [requirements.txt](requirements.txt) file.
+- `MAPBOX_TOKEN` - Your Mapbox API token for satellite imagery
+- `PORT` - Port number (default: 5000)
+
+## Project Structure
+
+```
+├── src/
+│   ├── app.py                 # Main Flask application
+│   ├── camera_functions.py    # Camera detection logic
+│   ├── satellite_functions.py # Satellite analysis logic
+│   ├── meteorological_functions.py # Weather analysis
+│   ├── email_alert.py        # Alert system
+│   ├── templates/            # HTML templates
+│   └── static/              # CSS, JS, images
+├── requirements.txt          # Python dependencies
+├── Dockerfile               # Docker configuration
+├── wsgi.py                  # WSGI entry point
+├── Procfile                 # Heroku deployment
+└── deploy.sh               # Deployment script
+```
+
+## Technologies Used
+
+- **Backend**: Flask, Python
+- **AI/ML**: TensorFlow, Keras, Scikit-learn
+- **Data**: OpenMeteo API, Mapbox API
+- **Deployment**: Docker, Heroku, Gunicorn
+
+## License
+
+This project is licensed under the MIT License.
 
 
 
