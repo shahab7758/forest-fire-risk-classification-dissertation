@@ -1,0 +1,14 @@
+streamlit==1.32.0
+flask==3.0.3
+tensorflow==2.16.1
+numpy==1.26.4
+pandas==2.2.2
+pillow==10.3.0
+requests==2.32.3
+python-dotenv==1.0.1
+scikit-learn==1.5.0
+scipy==1.13.1
+openmeteo_requests==1.2.0
+openmeteo_sdk==1.11.7
+mailersend==0.5.6
+apscheduler==3.10.4 
