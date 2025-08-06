@@ -14,7 +14,16 @@ MAPBOX_TOKEN = os.getenv("MAPBOX_TOKEN")
 script_dir = os.path.dirname(os.path.abspath(__file__))
 # Construct the path to the model file relative to the script location
 model_path = os.path.join(script_dir, "..", "analysis", "wildfire_satellite_detection_model.keras")
-model = load_model(model_path)
+
+# Try to load the model, handle missing model gracefully
+try:
+    model = load_model(model_path)
+    print("Satellite model loaded successfully")
+except Exception as e:
+    print(f"Warning: Could not load satellite model from {model_path}")
+    print(f"Error: {e}")
+    print("Satellite detection will not be available. Please ensure the model file is present.")
+    model = None
 
 
 # Function to preprocess the satellite image
@@ -31,6 +40,13 @@ def preprocess_image(img_path):
 def satellite_cnn_predict(
     latitude, longitude, output_size, zoom_level, crop_amount, save_path
 ):
+    # Check if model is available
+    if model is None:
+        return {
+            "error": "Satellite model not available. Please ensure the model file is present.",
+            "probability": None
+        }
+    
     # Increase the height of the image by crop_amount pixels
     output_size_modified = (output_size[0], output_size[1] + crop_amount)
 
@@ -58,3 +74,4 @@ def satellite_cnn_predict(
 
     else:
         print("Failed to retrieve the image.")
+        return None
