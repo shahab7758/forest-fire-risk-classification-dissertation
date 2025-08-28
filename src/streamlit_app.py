@@ -129,34 +129,42 @@ with tab2:
                     
                     prediction = camera_cnn_predict(file_wrapper)
                     
-                    # Fixed logic: 100% confidence means NO FIRE (low risk)
-                    # Lower confidence means higher uncertainty, potentially indicating fire
+                    # Fixed logic: Make confidence percentage more intuitive
+                    # High prediction value (≥0.5) means NO FIRE
+                    # Low prediction value (<0.5) means FIRE DETECTED
                     if prediction >= 0.5:
-                        # High prediction value (≥0.5) means NO FIRE
-                        confidence = round(prediction * 100)
+                        # NO FIRE detected
                         wildfire_prediction = 0  # 0 = No Fire
                         risk_level = "Low"
                         status = "Safe"
                         action = "No immediate action needed"
-                        color = "success"
+                        
+                        # For NO FIRE: Show confidence as "Certainty of No Fire"
+                        # Convert prediction to meaningful confidence (0.5-1.0 becomes 0-100%)
+                        confidence = round(((prediction - 0.5) / 0.5) * 100)
+                        confidence_text = f"Certainty of No Fire: {confidence}%"
+                        
                     else:
-                        # Low prediction value (<0.5) means FIRE DETECTED
-                        confidence = round((1 - prediction) * 100)
+                        # FIRE DETECTED
                         wildfire_prediction = 1  # 1 = Fire Detected
                         risk_level = "High"
                         status = "Fire Detected"
                         action = "Immediate attention required"
-                        color = "error"
+                        
+                        # For FIRE: Show confidence as "Certainty of Fire Detection"
+                        # Convert prediction to meaningful confidence (0-0.5 becomes 100-0%)
+                        confidence = round(((0.5 - prediction) / 0.5) * 100)
+                        confidence_text = f"Certainty of Fire Detection: {confidence}%"
                     
-                    # Display results with corrected logic
+                    # Display results with corrected logic and clear confidence
                     if wildfire_prediction == 1:
                         st.error("🚨 Fire Detected!")
-                        st.info(f"Confidence: {confidence}%")
+                        st.info(confidence_text)
                         st.warning(f"Risk Level: {risk_level} - {action}")
                         st.error(f"Status: {status}")
                     else:
                         st.success("✅ No Fire Detected")
-                        st.info(f"Confidence: {confidence}%")
+                        st.info(confidence_text)
                         st.success(f"Risk Level: {risk_level} - {action}")
                         st.success(f"Status: {status}")
                         
