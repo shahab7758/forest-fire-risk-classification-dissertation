@@ -128,18 +128,37 @@ with tab2:
                     file_wrapper.filename = uploaded_file.name
                     
                     prediction = camera_cnn_predict(file_wrapper)
-                    confidence = round((prediction if prediction > 0.5 else 1 - prediction) * 100)
-                    wildfire_prediction = 1 if prediction < 0.5 else 0
                     
-                    # Display results
-                    if wildfire_prediction == 0:
+                    # Fixed logic: 100% confidence means NO FIRE (low risk)
+                    # Lower confidence means higher uncertainty, potentially indicating fire
+                    if prediction >= 0.5:
+                        # High prediction value (≥0.5) means NO FIRE
+                        confidence = round(prediction * 100)
+                        wildfire_prediction = 0  # 0 = No Fire
+                        risk_level = "Low"
+                        status = "Safe"
+                        action = "No immediate action needed"
+                        color = "success"
+                    else:
+                        # Low prediction value (<0.5) means FIRE DETECTED
+                        confidence = round((1 - prediction) * 100)
+                        wildfire_prediction = 1  # 1 = Fire Detected
+                        risk_level = "High"
+                        status = "Fire Detected"
+                        action = "Immediate attention required"
+                        color = "error"
+                    
+                    # Display results with corrected logic
+                    if wildfire_prediction == 1:
                         st.error("🚨 Fire Detected!")
                         st.info(f"Confidence: {confidence}%")
-                        st.warning("Risk Level: High - Immediate attention needed")
+                        st.warning(f"Risk Level: {risk_level} - {action}")
+                        st.error(f"Status: {status}")
                     else:
                         st.success("✅ No Fire Detected")
                         st.info(f"Confidence: {confidence}%")
-                        st.success("Risk Level: Low - Area appears safe")
+                        st.success(f"Risk Level: {risk_level} - {action}")
+                        st.success(f"Status: {status}")
                         
                 except Exception as e:
                     st.error(f"Error analyzing image: {str(e)}")
